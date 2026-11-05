@@ -7,6 +7,7 @@ A [Herdr](https://herdr.dev) mod: tab groups like the ones in Chrome. Sort your 
 - **Fold a group** by clicking its chip in the tab bar or its header in the Agents list. Folded tabs keep running, and `Cmd+number` and `tab.next` skip them, so the numbers match what you see.
 - **Nothing gets lost.** A folded tab that needs your input comes back on its own, and a chip shows a spinner or a dot when something behind it is working or done.
 - **Sort from the keyboard.** `Cmd+O` then `1` moves the current tab to the first group. You can also right-click a tab, or drag it onto a chip.
+- **Agents go by their session.** A row in the Agents list shows its own agent's terminal title instead of the tab's name, so several agents in one tab stay apart. Claude Code writes the session's topic there. A row without a title shows the tab's name.
 
 ## Install
 
@@ -53,7 +54,7 @@ The button at the top right of the Agents list switches between this view and He
 
 ## What it touches
 
-- Replaces the tab bar and Agents list in the layout you point at them. Both are copies of Herdr's own mods, so everything else in those two places works as usual.
+- Replaces the tab bar and Agents list in the layout you point at them. Both are copies of Herdr's own mods, so apart from the groups and the row names, those two places work as usual.
 - Adds one key to `keys.json`.
 - Runs no programs, makes no network requests, and reads no files outside the Herdr home.
 
@@ -64,7 +65,7 @@ The two mods go together: `agents-groups` reads the groups that `tab-groups` kee
 - `agent.next` and `agent.prev` still visit agents in folded groups. Herdr doesn't skip settled tabs there, and a mod can't leave an agent out of the order. The tab goes back into its group when you leave it.
 - `Cmd+P` and other lists from Herdr don't know about groups, and still show folded tabs.
 - Folding the group of the current tab from the Agents list keeps that tab on screen until you leave it. Folding from the chip moves to the next visible tab right away.
-- Tested on macOS with Herdr 0.1.12 only. `tab-groups` and `agents-groups` are copies of the versions in that release, so they won't pick up later changes to Herdr's own tab bar and Agents list.
+- Tested on macOS only, with Herdr 0.1.12 (the row names with 0.1.13). `tab-groups` and `agents-groups` are copies of the versions in 0.1.12, so they won't pick up later changes to Herdr's own tab bar and Agents list.
 
 ## License
 

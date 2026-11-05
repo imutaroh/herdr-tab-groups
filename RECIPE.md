@@ -21,7 +21,7 @@ This file is the brief: enough to build Tab Groups from an empty folder. The fil
 
 The six group colors: `#3fae6a`, `#5b8def`, `#e3814f`, `#8b7cf6`, `#22a99a`, `#d9649a`. A new group takes the least used one.
 
-**Agents list, in the sidebar's existing block:** the shipped list with a third view, "Grouped by tab group", which is the default. Groups appear in tab bar order, and "No group" comes last. Only groups with agents appear. Each header is 30px tall with an 8px dot in the group's color, the name and member count in 11px medium text, and when folded a chevron and the most urgent status mark. Rows look the same as in the shipped list.
+**Agents list, in the sidebar's existing block:** the shipped list with a third view, "Grouped by tab group", which is the default. Groups appear in tab bar order, and "No group" comes last. Only groups with agents appear. Each header is 30px tall with an 8px dot in the group's color, the name and member count in 11px medium text, and when folded a chevron and the most urgent status mark. Rows look the same as in the shipped list, except for the name: a row shows its own agent's terminal title, even when someone named the tab. If the title only names the program, a folder or a host, the row shows the tab's name, as the shipped list does.
 
 **Picker, a popup 340px wide, 40px from the top:** a title line (`Move "<tab>" to`), a 31px row for each group (number, 10px colored dot, name, a check if the tab is in it, member count, and `▸` or `▾`), a line, "New group", "Remove from group" when the tab is in one, and a key hint.
 
@@ -91,6 +91,8 @@ Measured on Herdr 0.1.12:
 In the code:
 
 - The shipped `agents` mod reads an unknown `agents.sort` value as Priority. Keep this view on its own key, or a shipped layout's list changes.
+- The shipped `agents` mod names a row from one lead pane per tab, so agents sharing a tab all read the same. Name each row from its own entry in `agents()`.
+- The shipped mod's `clean` takes a leading `~/` or `/` off a title along with the spinner, so its check for those folders never matches. Look for them in the raw title, or a row reads `dotfiles` for `~/dotfiles`.
 - `"tab-groups"` is both the mod's folder name and its shared key, and `agents-groups` uses it for both too. If the folder has to be renamed, change `KEY` in `tab-groups` and `GROUPS_KEY` in `agents-groups`.
 - Each mod's `localStorage` is its own, so the Agents list starts with no pins and no time stamps.
 - `Cmd+P` and other shipped lists don't know about groups, and show folded tabs.
@@ -102,6 +104,7 @@ In the code:
 - `Cmd+O` opens the picker for the shown tab, and `1` puts that tab behind the first group's chip.
 - Clicking a chip hides the group's other tabs and `herdr-app ls` shows them `settled`. `Cmd+number` and `tab.next` skip them.
 - The Agents list shows one header per group with agents, in tab bar order, with "No group" last, and clicking a header does the same as clicking the chip.
+- Two agents in one tab show two rows, each named with its own terminal title, while the tab bar keeps the tab's name. An agent whose title is only the program's name or a folder shows the tab's name.
 - A folded tab whose agent reports `blocked` comes back beside its chip, and its row stays under the header with "Needs you".
 - A folded tab whose agent reports `done` stays hidden, with a dot beside its chip.
 - Selecting a hidden tab shows it beside its chip, and leaving hides it again.
