@@ -85,7 +85,7 @@ Measured on Herdr 0.1.12:
 - Herdr lifts a tab's settle when the tab is shown, and leaving doesn't restore it. It also lifts it when a settled tab's agent turns `done` or `blocked`, but settling it again sticks. That's why the sync runs on a timer.
 - Settling the shown tab moves to the next unsettled tab. Settling a tab that is already settled does not move, so unsettle first.
 - Closing the shown tab ignores settle when picking the next one.
-- `run()` results don't reach `spaces()` in the same turn. `setShared` reads back right away. Don't sync right after `tab.move`, or the sync works from the old order and undoes it. For the same reason the picker arranges the bar once more 300ms after a reorder key.
+- `run()` results don't reach `spaces()` in the same turn. `setShared` reads back right away. Don't sync right after `tab.move`, or the sync works from the old order and undoes it. The picker arranges the bar once more 300ms after a reorder key in case a quick second press did that, but only while it is still open.
 - `tab.select {index}` skips settled tabs, but `tab.move {index}` counts them.
 - `agent.next` does not skip settled tabs. Leaving an agent out of `setAgentOrder` doesn't help, because missing agents are appended to the order.
 
@@ -103,7 +103,7 @@ In the code:
 
 - `herdr-app check` passes on both folders, and `herdr-app status` shows no errors with the layout pointing at them.
 - `Cmd+O` opens the picker for the shown tab, and `1` puts that tab behind the first group's chip.
-- In the picker, `Shift+J` moves the selected group down one row, its chip moves the same way in the tab bar, and the order is the same after a restart.
+- In the picker, `Shift+J` moves the selected group down one row, and when both groups have tabs in the shown space their chips swap in the tab bar. The picker shows the same order after a restart.
 - Clicking a chip hides the group's other tabs and `herdr-app ls` shows them `settled`. `Cmd+number` and `tab.next` skip them.
 - The Agents list shows one header per group with agents, in tab bar order, with "No group" last, and clicking a header does the same as clicking the chip.
 - Two agents in one tab show two rows, each named with its own terminal title, while the tab bar keeps the tab's name. An agent whose title is only the program's name or a folder shows the tab's name.

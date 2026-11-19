@@ -474,7 +474,7 @@ class Picker {
   reorder(g, by, cx) {
     if (!g || !shiftGroup(g.id, by)) return;
     this.at += by;
-    // A quick second press can work from the tab order before the first one landed. This puts the bar right once it has.
+    // A quick second press may work from the tab order before the first one landed, so arrange once more.
     cx.timer.after(300, () => arrange(state()));
   }
 
@@ -487,8 +487,9 @@ class Picker {
     const groups = state().groups;
     // With Shift held, a letter may arrive in either case.
     const k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+    const shift = e.modifiers?.shift || e.keystroke?.startsWith("shift-") || k !== e.key;
     if (k === "escape") this.dismiss();
-    else if (e.modifiers?.shift && ["down", "j", "up", "k"].includes(k)) this.reorder(groups[this.at], k === "down" || k === "j" ? 1 : -1, cx);
+    else if (shift && ["down", "j", "up", "k"].includes(k)) this.reorder(groups[this.at], k === "down" || k === "j" ? 1 : -1, cx);
     else if (k === "down" || k === "j") this.at = (this.at + 1) % Math.max(1, groups.length);
     else if (k === "up" || k === "k") this.at = (this.at + groups.length - 1) % Math.max(1, groups.length);
     else if (k === "enter") this.pick(groups[this.at]);
@@ -533,7 +534,7 @@ class Picker {
         .child(div().w(10).flex_none().text_size(11).text_color(t.dim).child("x"))
         .child(icon(t, "x"))
         .child("Remove from group")))
-      .child(div().px(8).pt(7).pb(4).text_size(11).text_color(t.dim).child(this.creating ? "enter create · esc close" : "1-9 move · f fold · e edit · j/k select · J/K reorder"));
+      .child(div().px(8).pt(7).pb(4).text_size(11).text_color(t.dim).child(this.creating ? "enter create · esc close" : "1-9 move · f fold · e edit · j/k select · J/K order"));
   }
 }
 
