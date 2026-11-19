@@ -1,12 +1,12 @@
 # Tab Groups
 
-Tab groups like the ones in Chrome. Tabs sort into named, colored groups such as Doing, Later and Waiting. A group is a colored chip in the tab bar with its tabs beside it, and clicking the chip folds the tabs away while they keep running. The Agents list in the sidebar is split by the same groups, and folding either one folds both.
+Tab groups like the ones in Chrome. Tabs sort into named, colored groups such as Doing, Later and Waiting. A group is a colored chip in the tab bar with its tabs beside it, and clicking the chip folds the tabs away while they keep running. The Agents list in the sidebar is split by the same groups, and folding either one folds both. The Go to list shows the same groups as headers.
 
 ![Tab Groups](preview.png)
 
 This file is the brief: enough to build Tab Groups from an empty folder. The files next to it are one build of it. If they don't work on your Herdr, or you want it different, build it again from here.
 
-**Adding it:** copy both folders from `mods/`. They use `place: none`, so nothing appears until a layout names them. In a layout the person can edit (clone a shipped one with `layout.clone` first, because shipped layouts are replaced on every start), set the tab bar block's `content.mod` to `tab-groups` and the Agents block's to `agents-groups`, and keep each block's size and `window_drag`. Merge `keys.json`. It runs no programs, reaches no network, and reads no files outside the Herdr home.
+**Adding it:** copy the three folders from `mods/`. They use `place: none`, so nothing appears until a layout names them. In a layout the person can edit (clone a shipped one with `layout.clone` first, because shipped layouts are replaced on every start), set the tab bar block's `content.mod` to `tab-groups` and the Agents block's to `agents-groups`, and keep each block's size and `window_drag`. Merge `keys.json`, which also points the Go to key at `picker-groups`. It reaches no network and reads no files outside the Herdr home. The only program it runs is Herdr's own `hc`: the Go to list asks it for the connected machines (`hc machine ls --json`), as the shipped one does.
 
 ## What you see
 
@@ -22,6 +22,8 @@ This file is the brief: enough to build Tab Groups from an empty folder. The fil
 The six group colors: `#3fae6a`, `#5b8def`, `#e3814f`, `#8b7cf6`, `#22a99a`, `#d9649a`. A new group takes the least used one.
 
 **Agents list, in the sidebar's existing block:** the shipped list with a third view, "Grouped by tab group", which is the default. Groups appear in tab bar order, and "No group" comes last. Only groups with agents appear. Each header is 30px tall with an 8px dot in the group's color, the name and member count in 11px medium text, and when folded a chevron and the most urgent status mark. Rows look the same as in the shipped list, except for the name: a row shows its own agent's terminal title, even when someone named the tab. If the title only names the program, a folder or a host, the row shows the tab's name, as the shipped list does.
+
+**Go to list, the shipped `picker` popup:** unchanged, except inside each space. A space's tabs come in tab bar order. Before a group's first tab there is a header, 26px tall, indented 16px, with an 8px dot in the group's color and the name in 11.5px medium muted text. A group's tab rows start 18px further in than the others, inside a row of the same width. A tab without a group has no header and no indent, and stays at its place in the order. Tabs in folded groups are listed too.
 
 **Picker, a popup 340px wide, 40px from the top:** a title line (`Move "<tab>" to`), a 31px row for each group (number, 10px colored dot, name, a check if the tab is in it, member count, and `▸` or `▾`), a line, "New group", "Remove from group" when the tab is in one, a key hint, and with two or more groups a second hint line for the reorder keys (`shift+j / shift+k  move the selected group down / up`).
 
@@ -60,6 +62,12 @@ The first run has three groups: Doing, Later (folded) and Waiting. They exist in
 
 In an unfolded group each status looks as it does in the shipped mods.
 
+**Go to list**
+
+- The arrow keys, `Enter` and clicks skip the group headers, as they skip the space headers.
+- Typing filters by the space's name, the tab's name and its agents' program names, as in the shipped list. A group's name is not matched. A header shows while at least one of its tabs matches, and the groups keep their order.
+- With no groups, or without `tab-groups`' state, the list is the shipped one.
+
 **Elsewhere**
 
 - Switching to a layout without `tab-groups` unsettles every tab, because the shipped tab bar doesn't read `settled`. Coming back hides them again.
@@ -71,12 +79,13 @@ In an unfolded group each status looks as it does in the shipped mods.
 
 - `mods/tab-groups/`: a copy of the shipped `tabs` mod (`place: none`, `overlay: {kind: "popup", at: "top", offset: 40, width: 340}`, so `mod.open` opens the picker at the top). One class picks a view from `props()`: no `overlay` is the tab bar, `group` is the editor, `target` (`{id, space}`) is the tab menu, otherwise the picker (optional `tab`, `create`).
 - `mods/agents-groups/`: a copy of the shipped `agents` mod, made with `mod.clone`.
+- `mods/picker-groups/`: a copy of the shipped `picker` mod, with its `overlay`. It only reads the state.
 - **State:** `shared("tab-groups")` is `{groups: [{id, name, color, folded}], tabs: {tabId: groupId}}`. The order of `groups` is the picker's order and the one its numbers follow. The tab bar's order is the tabs' own order, which Herdr keeps. `agents-groups` reads it and writes only `folded`. Its chosen view is in `shared("agents-groups.sort")`.
 - **Sync:** each second the tab bar compares the state to `spaces()`: `tab.settle` or `tab.unsettle` where a tab differs, `tab.move` where the order differs. A tab should be hidden when its group is folded, it isn't the shown tab, and its status isn't `blocked`.
-- **`herdr` functions:** `spaces`, `panes`, `run`, `shared`, `setShared`, `openOverlay`, `closeOverlay`, `props`, `keys`, `machines`, `layout`, `settings`, `window`, `theme`, and in `agents-groups` also `agents`, `terminals`, `focused`, `setAgentOrder`.
-- **Commands:** `tab.settle`, `tab.unsettle`, `tab.move`, `tab.select`, `tab.close`, `tab.new`, `tab.rename`, `tab.next`, `tab.prev`, `layout.show`, `layout.hide`, `layout.select`, `layout.resize`, `pane.focus`, `terminal.peek`, `window.minimize`, `window.maximize`, `window.close`.
-- **Icons:** from shipped mods, by path: `mods/workspace-chrome/` (`spinner`, `plus`, `x`, `square`, `square-pen`, `check`, `folder`, `layers`, `clock`, `pin`, `pin-off`, `chevron-down`, `chevron-right`), `mods/pane/close.svg`, `mods/files/file.svg`, `mods/changes/changes.svg`, `mods/tabs/win-*.svg`.
-- **Key:** `keys.json` binds `cmd-o` to `mod.open:tab-groups`.
+- **`herdr` functions:** `spaces`, `panes`, `run`, `shared`, `setShared`, `openOverlay`, `closeOverlay`, `props`, `keys`, `machines`, `layout`, `settings`, `window`, `theme`, and in `agents-groups` also `agents`, `terminals`, `focused`, `setAgentOrder`. `picker-groups` uses `agents`, `spaces`, `terminals`, `run`, `hc`, `shared`, `setShared`, `theme`, `settings`, `props`, `closeOverlay`.
+- **Commands:** `tab.settle`, `tab.unsettle`, `tab.move`, `tab.select`, `tab.close`, `tab.new`, `tab.rename`, `tab.next`, `tab.prev`, `layout.show`, `layout.hide`, `layout.select`, `layout.resize`, `pane.focus`, `terminal.peek`, `window.minimize`, `window.maximize`, `window.close`, and in `picker-groups` `tab.select`, `tab.close`, `tab.new`, `space.new`.
+- **Icons:** from shipped mods, by path: `mods/workspace-chrome/` (`spinner`, `plus`, `x`, `square`, `square-pen`, `check`, `folder`, `layers`, `clock`, `pin`, `pin-off`, `chevron-down`, `chevron-right`, `search`), `mods/pane/close.svg`, `mods/files/file.svg`, `mods/changes/changes.svg`, `mods/tabs/win-*.svg`.
+- **Keys:** `keys.json` binds `cmd-o` to `mod.open:tab-groups`, and `cmd-p` (the shipped key for `mod.open:picker`) to `mod.open:picker-groups`.
 
 ## Watch out
 
@@ -96,17 +105,22 @@ In the code:
 - The shipped mod's `clean` takes a leading `~/` or `/` off a title along with the spinner, so its check for those folders never matches. Look for them in the raw title, or a row reads `dotfiles` for `~/dotfiles`.
 - `"tab-groups"` is both the mod's folder name and its shared key, and `agents-groups` uses it for both too. If the folder has to be renamed, change `KEY` in `tab-groups` and `GROUPS_KEY` in `agents-groups`.
 - Each mod's `localStorage` is its own, so the Agents list starts with no pins and no time stamps.
-- `Cmd+P` and other shipped lists don't know about groups, and show folded tabs.
+- The shipped `picker` decides which rows can be selected by leaving out its space headers, in four places. Leave the group headers out in all four, or `Enter` and the selection after typing land on the wrong row.
+- Past 320px the list places each row by a fixed height per kind. Give the group header its own height there and on the element.
+- Order the tabs before filtering them, or a filter can change where a group sits.
+- The command palette's "Go to space or tab…" opens the shipped `picker` by name, so it shows no groups.
 - Only tested on macOS. The window buttons for Windows and Linux are the shipped mod's and weren't exercised.
 
 ## Done when
 
-- `herdr-app check` passes on both folders, and `herdr-app status` shows no errors with the layout pointing at them.
+- `herdr-app check` passes on the three folders, and `herdr-app status` shows no errors with the layout pointing at them.
 - `Cmd+O` opens the picker for the shown tab, and `1` puts that tab behind the first group's chip.
 - In the picker, `Shift+J` moves the selected group down one row, and when both groups have tabs in the shown space their chips swap in the tab bar. The picker shows the same order after a restart.
 - Clicking a chip hides the group's other tabs and `herdr-app ls` shows them `settled`. `Cmd+number` and `tab.next` skip them.
 - The Agents list shows one header per group with agents, in tab bar order, with "No group" last, and clicking a header does the same as clicking the chip.
 - Two agents in one tab show two rows, each named with its own terminal title, while the tab bar keeps the tab's name. An agent whose title is only the program's name or a folder shows the tab's name.
+- With tabs in two groups and one outside, the Go to list shows each group's header above its tabs, in the tab bar's order, and the tab outside keeps its place with no header. The arrow keys never stop on a header.
+- Typing part of one tab's name in the Go to list leaves that tab under its group's header, and `Enter` goes to it.
 - A folded tab whose agent reports `blocked` comes back beside its chip, and its row stays under the header with "Needs you".
 - A folded tab whose agent reports `done` stays hidden, with a dot beside its chip.
 - Selecting a hidden tab shows it beside its chip, and leaving hides it again.

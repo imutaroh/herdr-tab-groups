@@ -1,6 +1,6 @@
 # Tab Groups
 
-A [Herdr](https://herdr.dev) mod: tab groups like the ones in Chrome. Sort your tabs into Doing, Later, Waiting or anything you name, and fold a group away when you don't need to see it. The Agents list in the sidebar is split by the same groups.
+A [Herdr](https://herdr.dev) mod: tab groups like the ones in Chrome. Sort your tabs into Doing, Later, Waiting or anything you name, and fold a group away when you don't need to see it. The Agents list in the sidebar and the Go to list are split by the same groups.
 
 ![Tab Groups](preview.png)
 
@@ -8,6 +8,7 @@ A [Herdr](https://herdr.dev) mod: tab groups like the ones in Chrome. Sort your 
 - **Nothing gets lost.** A folded tab that needs your input comes back on its own, and a chip shows a spinner or a dot when something behind it is working or done.
 - **Sort from the keyboard.** `Cmd+O` then `1` moves the current tab to the first group. You can also right-click a tab, or drag it onto a chip.
 - **Order the groups from the keyboard.** In the picker, `Shift+J` and `Shift+K` move the selected group down and up. The chips in the tab bar and the headers in the Agents list then take the picker's order, in every space, and ungrouped tabs stay where they are. Dragging a chip still moves it only in the tab bar, until the next move from the keyboard.
+- **Go to shows the groups.** In the Go to list (`Cmd+P`), each group has a header with its tabs under it, in the tab bar's order. A tab without a group stays where it is in that order, without a header. Filtering finds the same tabs as before.
 - **Agents go by their session.** A row in the Agents list shows its own agent's terminal title instead of the tab's name, so several agents in one tab stay apart. Claude Code writes the session's topic there. A row without a title shows the tab's name.
 
 ## Install
@@ -20,7 +21,7 @@ Read ~/.config/herdr-app/AGENTS.md, then add this mod: https://github.com/imutar
 
 Or by hand:
 
-1. Copy `mods/tab-groups/` and `mods/agents-groups/` to `~/.config/herdr-app/mods/`.
+1. Copy `mods/tab-groups/`, `mods/agents-groups/` and `mods/picker-groups/` to `~/.config/herdr-app/mods/`.
 2. Run `herdr-app check` on each folder.
 3. Clone your layout, because shipped layouts are replaced on every start:
 
@@ -30,14 +31,16 @@ Or by hand:
 
 4. In `~/.config/herdr-app/layouts/my-layout.json`, change `"mod": "tabs"` to `"mod": "tab-groups"`, and `"mod": "agents"` to `"mod": "agents-groups"`.
 5. Add `"cmd-o": "mod.open:tab-groups"` to the `global` section of `~/.config/herdr-app/keys.json`. On Linux or Windows, pick another key.
+6. In the same section, set `"cmd-p": "mod.open:picker-groups"`, and change any other key you have on `mod.open:picker` the same way.
 
-To remove it, point the layout back at `tabs` and `agents`. Leaving the layout, or removing the mod from it, brings every folded tab back.
+To remove it, point the layout back at `tabs` and `agents`, and the Go to key back at `mod.open:picker`. Leaving the layout, or removing the mod from it, brings every folded tab back.
 
 ## Keys and clicks
 
 | Where | What | Action |
 | --- | --- | --- |
 | Anywhere | `Cmd+O` | Open the group picker for the current tab |
+| Anywhere | `Cmd+P` | Open the Go to list, split by group |
 | Picker | `1`-`9`, or `j` / `k` and `Enter` | Move the tab to that group |
 | Picker | `f` | Fold or unfold the selected group |
 | Picker | `Shift+J` / `Shift+K`, or `Shift` with the arrow keys | Move the selected group down or up |
@@ -56,18 +59,18 @@ The button at the top right of the Agents list switches between this view and He
 
 ## What it touches
 
-- Replaces the tab bar and Agents list in the layout you point at them. Both are copies of Herdr's own mods, so apart from the groups and the row names, those two places work as usual.
-- Adds one key to `keys.json`.
-- Runs no programs, makes no network requests, and reads no files outside the Herdr home.
+- Replaces the tab bar and Agents list in the layout you point at them, and the Go to list behind the key you point at it. All three are copies of Herdr's own mods, so apart from the groups and the row names, those places work as usual.
+- Adds one key to `keys.json` and changes one.
+- Makes no network requests and reads no files outside the Herdr home. The only program it runs is Herdr's own `hc`, which the Go to list asks for the connected machines, as Herdr's list does.
 
-The two mods go together: `agents-groups` reads the groups that `tab-groups` keeps.
+The mods go together: `agents-groups` and `picker-groups` read the groups that `tab-groups` keeps.
 
 ## Limits
 
 - `agent.next` and `agent.prev` still visit agents in folded groups. Herdr doesn't skip settled tabs there, and a mod can't leave an agent out of the order. The tab goes back into its group when you leave it.
-- `Cmd+P` and other lists from Herdr don't know about groups, and still show folded tabs.
+- The Go to list shows the tabs of folded groups too, so every tab can be reached from it. The command palette still opens Herdr's own Go to list, without groups.
 - Folding the group of the current tab from the Agents list keeps that tab on screen until you leave it. Folding from the chip moves to the next visible tab right away.
-- Tested on macOS only, with Herdr 0.1.12 (the row names with 0.1.13). `tab-groups` and `agents-groups` are copies of the versions in 0.1.12, so they won't pick up later changes to Herdr's own tab bar and Agents list.
+- Tested on macOS only, with Herdr 0.1.12 (the row names with 0.1.13). `tab-groups` and `agents-groups` are copies of the versions in 0.1.12, and `picker-groups` of the one in 0.1.15, so they won't pick up later changes to Herdr's own tab bar, Agents list and Go to list.
 
 ## License
 
