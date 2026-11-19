@@ -7,6 +7,7 @@ A [Herdr](https://herdr.dev) mod: tab groups like the ones in Chrome. Sort your 
 - **Fold a group** by clicking its chip in the tab bar or its header in the Agents list. Folded tabs keep running, and `Cmd+number` and `tab.next` skip them, so the numbers match what you see.
 - **Nothing gets lost.** A folded tab that needs your input comes back on its own, and a chip shows a spinner or a dot when something behind it is working or done.
 - **Sort from the keyboard.** `Cmd+O` then `1` moves the current tab to the first group. You can also right-click a tab, or drag it onto a chip.
+- **Order the groups from the keyboard.** In the picker, `Shift+J` and `Shift+K` move the selected group down and up. The chips in the tab bar and the headers in the Agents list then take the picker's order, in every space, and ungrouped tabs stay where they are. Dragging a chip still moves it only in the tab bar, until the next move from the keyboard.
 - **Agents go by their session.** A row in the Agents list shows its own agent's terminal title instead of the tab's name, so several agents in one tab stay apart. Claude Code writes the session's topic there. A row without a title shows the tab's name.
 
 ## Install
@@ -39,6 +40,7 @@ To remove it, point the layout back at `tabs` and `agents`. Leaving the layout, 
 | Anywhere | `Cmd+O` | Open the group picker for the current tab |
 | Picker | `1`-`9`, or `j` / `k` and `Enter` | Move the tab to that group |
 | Picker | `f` | Fold or unfold the selected group |
+| Picker | `Shift+J` / `Shift+K`, or `Shift` with the arrow keys | Move the selected group down or up |
 | Picker | `n` | New group, with the tab in it |
 | Picker | `e` | Edit the selected group |
 | Picker | `x` | Take the tab out of its group |
