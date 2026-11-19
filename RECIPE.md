@@ -23,7 +23,7 @@ The six group colors: `#3fae6a`, `#5b8def`, `#e3814f`, `#8b7cf6`, `#22a99a`, `#d
 
 **Agents list, in the sidebar's existing block:** the shipped list with a third view, "Grouped by tab group", which is the default. Groups appear in tab bar order, and "No group" comes last. Only groups with agents appear. Each header is 30px tall with an 8px dot in the group's color, the name and member count in 11px medium text, and when folded a chevron and the most urgent status mark. Rows look the same as in the shipped list, except for the name: a row shows its own agent's terminal title, even when someone named the tab. If the title only names the program, a folder or a host, the row shows the tab's name, as the shipped list does.
 
-**Picker, a popup 340px wide, 40px from the top:** a title line (`Move "<tab>" to`), a 31px row for each group (number, 10px colored dot, name, a check if the tab is in it, member count, and `▸` or `▾`), a line, "New group", "Remove from group" when the tab is in one, and a key hint.
+**Picker, a popup 340px wide, 40px from the top:** a title line (`Move "<tab>" to`), a 31px row for each group (number, 10px colored dot, name, a check if the tab is in it, member count, and `▸` or `▾`), a line, "New group", "Remove from group" when the tab is in one, a key hint, and with two or more groups a second hint line for the reorder keys (`shift+j / shift+k  move the selected group down / up`).
 
 **Group editor, a popup 250px wide:** a name field, six 22px color circles with a ring on the current color, "Fold" or "Unfold", and "Delete group (keep tabs)".
 
