@@ -253,8 +253,7 @@ export default class Picker extends View {
       const here = r.w.active && r.ctx.active;
       return h_flex()
         .id(`pk-${r.ctx.id}`)
-        .ml(r.g ? 22 : 4)
-        .mr(4)
+        .mx(4)
         .px(10)
         .h(32)
         .rounded(7)
@@ -264,6 +263,8 @@ export default class Picker extends View {
         .when(on, (el) => el.bg(t.hover))
         .hover((s) => s.bg(t.hover))
         .on_click(() => this.go(r))
+        // The row's gap adds to this, so a group's tabs start 18px further in.
+        .when(Boolean(r.g), (el) => el.child(div().w(8).flex_none()))
         .child(this.glyph(t, r.ctx.status))
         .child(div().flex_1().truncate().text_color(t.foreground).when(here, (d) => d.font_semibold()).child(r.ctx.name))
         .when(r.ctx.status === "blocked", (el) => el.child(div().text_size(11).text_color(t.blocked).child("needs you")))

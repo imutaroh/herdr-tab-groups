@@ -61,7 +61,7 @@ The button at the top right of the Agents list switches between this view and He
 
 - Replaces the tab bar and Agents list in the layout you point at them, and the Go to list behind the key you point at it. All three are copies of Herdr's own mods, so apart from the groups and the row names, those places work as usual.
 - Adds one key to `keys.json` and changes one.
-- Runs no programs, makes no network requests, and reads no files outside the Herdr home.
+- Makes no network requests and reads no files outside the Herdr home. The only program it runs is Herdr's own `hc`, which the Go to list asks for the connected machines, as Herdr's list does.
 
 The mods go together: `agents-groups` and `picker-groups` read the groups that `tab-groups` keeps.
 
