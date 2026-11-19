@@ -1,7 +1,8 @@
 herdr-tab-groups, tab groups for the Herdr desktop app
 Copyright 2026 imutaroh
 
-mods/tab-groups is derived from the `tabs` mod shipped with Herdr, and
-mods/agents-groups from the `agents` mod shipped with Herdr
+mods/tab-groups is derived from the `tabs` mod shipped with Herdr,
+mods/agents-groups from the `agents` mod shipped with Herdr, and
+mods/picker-groups from the `picker` mod shipped with Herdr
 (https://github.com/herdrdev/herdr-app, Apache License 2.0).
 The top of each main.js says what was changed.
